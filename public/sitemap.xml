@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd
+                            http://www.google.com/schemas/sitemap-image/1.1 http://www.google.com/schemas/sitemap-image/1.1/sitemap-image.xsd">
+  <!-- 1. 首页社区卫生管理驾驶舱 (唯一包含 image) -->
+  <url>
+    <loc>https://26-bj-com-bid.softwarelink.net/</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://26-bj-com-bid.softwarelink.net/docs/assets/dashboard-preview.png</image:loc>
+      <image:title>东城区社管中心社区卫生服务系统控制台预览</image:title>
+    </image:image>
+  </url>
+  <!-- 2. 公开招标公告全文页 -->
+  <url>
+    <loc>https://26-bj-com-bid.softwarelink.net/tender</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <!-- 3. 用户登录鉴权页 -->
+  <url>
+    <loc>https://26-bj-com-bid.softwarelink.net/login</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <!-- 4. 区域一体化管理与HIS解耦中枢 -->
+  <url>
+    <loc>https://26-bj-com-bid.softwarelink.net/regional-mgmt</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <!-- 5. 健康档案与基本公卫协同工坊 -->
+  <url>
+    <loc>https://26-bj-com-bid.softwarelink.net/public-health</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <!-- 6. 家医签约与重点人群服务平台 -->
+  <url>
+    <loc>https://26-bj-com-bid.softwarelink.net/family-doctor</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <!-- 7. 系统总控与等保安全审计 -->
+  <url>
+    <loc>https://26-bj-com-bid.softwarelink.net/system</loc>
+    <lastmod>2026-09-15</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+</urlset>

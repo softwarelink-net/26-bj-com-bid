@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --banner-height: 40px;
+  --medical-navy: #1e3a8a;
+  --medical-sky: #0369a1;
+  --medical-teal: #0d9488;
+  --medical-deep: #0c1a3a;
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  padding-top: 40px;
+  font-family: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', system-ui, sans-serif;
+  background: #f0f7fb;
+  color: #0f172a;
+  -webkit-font-smoothing: antialiased;
+}
+
+@layer components {
+  .panel-card {
+    @apply rounded-xl border border-slate-200/80 bg-white shadow-sm;
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-medical-navy via-medical-sky to-medical-teal px-4 py-2 text-sm font-semibold text-white shadow transition hover:opacity-90 disabled:opacity-50;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-sm text-slate-700 transition hover:bg-slate-50;
+  }
+  .stat-chip {
+    @apply inline-flex items-center gap-1 rounded-md bg-sky-50 px-2.5 py-1 text-xs font-medium text-sky-800;
+  }
+}

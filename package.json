@@ -1,0 +1,35 @@
+{
+  "name": "26-bj-com-bid",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "区社管中心社区卫生服务综合管理系统建设项目 (11010126210200022537-XM001)",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "lint": "vue-tsc --noEmit",
+    "deploy": "npm run build && node scripts/deploy-allworld.mjs 26-bj-com-bid"
+  },
+  "dependencies": {
+    "echarts": "^5.5.1",
+    "pinia": "^2.2.6",
+    "sql.js": "^1.12.0",
+    "vue": "^3.5.13",
+    "vue-router": "^4.4.5"
+  },
+  "devDependencies": {
+    "@types/sql.js": "^1.4.9",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "typescript": "~5.6.3",
+    "vite": "^5.4.11",
+    "vue-tsc": "^2.1.10",
+    "wrangler": "^4.135.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
