@@ -279,10 +279,12 @@ function md5Fallback(str: string): string {
 
 export async function initSqlEngine(): Promise<void> {
   if (ready && db) return
+  // 使用本地 public/sqljs WASM，避免依赖外网 CDN（sql.js.org）导致初始化失败
+  const base = import.meta.env.BASE_URL || '/'
   SQL = await initSqlJs({
-    locateFile: (file) => `https://sql.js.org/dist/${file}`,
+    locateFile: (file) => `${base}sqljs/${file}`,
   })
-  const response = await fetch('/data/bjcom_database.sqlite')
+  const response = await fetch(`${base}data/bjcom_database.sqlite`)
   if (!response.ok) {
     throw new Error(`无法加载 SQLite 数据库: ${response.status}`)
   }
