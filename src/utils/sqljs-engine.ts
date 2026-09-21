@@ -277,12 +277,36 @@ function md5Fallback(str: string): string {
   return toHex(a) + toHex(b) + toHex(c) + toHex(d)
 }
 
+type SqlJsInit = (config?: {
+  locateFile?: (file: string) => string
+  wasmBinary?: ArrayBuffer | Uint8Array
+}) => Promise<SqlJsStatic>
+
+/** Vite 对 sql.js 的 CJS 互操作可能把 default 再包一层 */
+function resolveSqlJsInit(mod: unknown): SqlJsInit {
+  if (typeof mod === 'function') return mod as SqlJsInit
+  if (mod && typeof mod === 'object' && 'default' in mod) {
+    const nested = (mod as { default: unknown }).default
+    if (typeof nested === 'function') return nested as SqlJsInit
+  }
+  throw new Error('sql.js 浏览器构建未能导出初始化函数')
+}
+
 export async function initSqlEngine(): Promise<void> {
   if (ready && db) return
-  // 使用本地 public/sqljs WASM，避免依赖外网 CDN（sql.js.org）导致初始化失败
+  // 浏览器构建请求 sql-wasm-browser.wasm。外网 CDN（sql.js.org）在国内常失败，
+  // 且 fetch 失败后没有同步回退，会抛出 both async and sync fetching of the wasm failed。
   const base = import.meta.env.BASE_URL || '/'
-  SQL = await initSqlJs({
-    locateFile: (file) => `${base}sqljs/${file}`,
+  const wasmUrl = `${base}sqljs/sql-wasm-browser.wasm`
+  const wasmResponse = await fetch(wasmUrl)
+  if (!wasmResponse.ok) {
+    throw new Error(`无法加载 SQLite WASM: ${wasmResponse.status} ${wasmUrl}`)
+  }
+  const wasmBinary = new Uint8Array(await wasmResponse.arrayBuffer())
+  const init = resolveSqlJsInit(initSqlJs)
+  SQL = await init({
+    wasmBinary,
+    locateFile: () => wasmUrl,
   })
   const response = await fetch(`${base}data/bjcom_database.sqlite`)
   if (!response.ok) {
