@@ -9,8 +9,10 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  assetsInclude: ['**/*.wasm'],
   optimizeDeps: {
     include: ['sql.js'],
+    exclude: ['sql.js/dist/sql-wasm-browser.wasm'],
   },
   server: {
     port: 5173,

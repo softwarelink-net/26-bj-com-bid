@@ -1,4 +1,6 @@
 import initSqlJs, { type Database, type SqlJsStatic } from 'sql.js'
+// 由 Vite 打进 assets，避免线上缺 public/sqljs 或被 SPA 回退成 HTML
+import bundledWasmUrl from 'sql.js/dist/sql-wasm-browser.wasm?url'
 
 export type RoleCode =
   | 'ROLE_SUPER_ADMIN'
@@ -292,17 +294,49 @@ function resolveSqlJsInit(mod: unknown): SqlJsInit {
   throw new Error('sql.js 浏览器构建未能导出初始化函数')
 }
 
+function isWasmMagic(bytes: Uint8Array): boolean {
+  return (
+    bytes.length >= 4 &&
+    bytes[0] === 0x00 &&
+    bytes[1] === 0x61 &&
+    bytes[2] === 0x73 &&
+    bytes[3] === 0x6d
+  )
+}
+
+async function loadWasmBinary(urls: string[]): Promise<{ wasmBinary: Uint8Array; wasmUrl: string }> {
+  const errors: string[] = []
+  for (const wasmUrl of urls) {
+    try {
+      const wasmResponse = await fetch(wasmUrl)
+      if (!wasmResponse.ok) {
+        errors.push(`${wasmUrl} → HTTP ${wasmResponse.status}`)
+        continue
+      }
+      const wasmBinary = new Uint8Array(await wasmResponse.arrayBuffer())
+      if (!isWasmMagic(wasmBinary)) {
+        errors.push(`${wasmUrl} → 非 WASM（可能被 SPA 回退成 HTML）`)
+        continue
+      }
+      return { wasmBinary, wasmUrl }
+    } catch (err) {
+      errors.push(`${wasmUrl} → ${String(err)}`)
+    }
+  }
+  throw new Error(`无法加载 SQLite WASM:\n${errors.join('\n')}`)
+}
+
 export async function initSqlEngine(): Promise<void> {
   if (ready && db) return
   // 浏览器构建请求 sql-wasm-browser.wasm。外网 CDN（sql.js.org）在国内常失败，
   // 且 fetch 失败后没有同步回退，会抛出 both async and sync fetching of the wasm failed。
+  // 优先使用 Vite 打包后的 assets URL，再回退到 public/sqljs。
   const base = import.meta.env.BASE_URL || '/'
-  const wasmUrl = `${base}sqljs/sql-wasm-browser.wasm`
-  const wasmResponse = await fetch(wasmUrl)
-  if (!wasmResponse.ok) {
-    throw new Error(`无法加载 SQLite WASM: ${wasmResponse.status} ${wasmUrl}`)
-  }
-  const wasmBinary = new Uint8Array(await wasmResponse.arrayBuffer())
+  const { wasmBinary, wasmUrl } = await loadWasmBinary([
+    bundledWasmUrl,
+    `${base}sqljs/sql-wasm-browser.wasm`,
+    `${base}sqljs/sql-wasm.wasm`,
+  ])
   const init = resolveSqlJsInit(initSqlJs)
   SQL = await init({
     wasmBinary,

@@ -6,6 +6,11 @@ declare module '*.vue' {
   export default component
 }
 
+declare module '*.wasm?url' {
+  const src: string
+  export default src
+}
+
 declare module 'sql.js' {
   export interface SqlValue {
     [key: string]: string | number | null | Uint8Array
